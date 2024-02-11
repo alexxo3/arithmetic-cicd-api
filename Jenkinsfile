@@ -17,7 +17,7 @@ pipeline{
 			
 				environment {
 				
-					ANYPOINT_CREDENTIALS = credentials(' ')
+					ANYPOINT_CREDENTIALS = credentials('300867f8-ac99-462e-bf15-31ca74820c01')
 				
 				}
 			
