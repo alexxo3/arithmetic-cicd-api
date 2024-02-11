@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="81c87b2e-b320-4f3c-8d29-b7dc2e41b955" >
+		<http:listener-connection host="0.0.0.0" port="${http.port}" />
+	</http:listener-config>
+	<flow name="arithmetic-cicd-apiFlow" doc:id="a09be32b-8acc-4a1a-8cca-a53323529cce" >
+		<http:listener doc:name="Listener" doc:id="3c47c5dc-a6d7-4f5a-88ed-bb84b739dcef" config-ref="HTTP_Listener_config" path="/arithmetic"/>
+		<logger level="INFO" doc:name="Logger" doc:id="da611e53-03c6-46f0-95ce-5e845c1203fa" message="api invoked"/>
+		<set-variable value="#[attributes.queryParams.num1]" doc:name="Set Variable" doc:id="4f2da577-fd4b-448b-a7ae-acd615550776" variableName="num1"/>
+		<set-variable value="#[attributes.queryParams.num2]" doc:name="Set Variable" doc:id="b40542ba-c5b3-4538-946e-c5380593c0d4" variableName="num2"/>
+		<ee:transform doc:name="Transform Message" doc:id="6a7b2a15-6c69-4900-bf32-90469c0636b0" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"addition": vars.num1 as Number + vars.num2 as Number,
+	"subtraction": vars.num1 as Number - vars.num2 as Number
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="c1d4041b-9dbf-4895-95a4-a28ffc23e74a" message="api created successfully"/>
+	</flow>
+</mule>
